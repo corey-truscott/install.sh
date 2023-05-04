@@ -50,7 +50,7 @@ mount /dev/$BOOT /mnt/boot
   mkdir -p /mnt/home
   mount /dev/$HOME /mnt/home
 
-pacstrap -K $(cat ./pkg)
+pacstrap -K /mnt $(cat ./pkg)
 
 genfstab -U /mnt >> /mnt/etc/fstab
 

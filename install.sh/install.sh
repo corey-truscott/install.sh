@@ -1,6 +1,6 @@
 #!/bin/bash
 
-notify() { neofetch && neofetch && neofetch }
+NOTIFY="neofetch && neofetch && neofetch"
 CHROOT="arch-chroot /mnt"
 
 # set correct time for mirrors
@@ -69,7 +69,7 @@ $CHROOT echo "$KEYMAP" >> /etc/vconsole.conf
 
 $CHROOT echo "$HOSTNAME" >> /etc/hostname
 
-notify
+$NOTIFY
 
 echo "Changing root password."
 $CHROOT passwd

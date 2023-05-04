@@ -79,5 +79,5 @@ $CHROOT systemctl enable NetworkManager.service
 $CHROOT grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 $CHROOT grub-mkconfig -o /boot/grub/grub.cfg
 
-shutdown --reboot 1 "System rebooting in 5 seconds"
-sleep 5
+neofetch
+echo "type \`reboot\` when you are ready to do so"

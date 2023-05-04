@@ -28,7 +28,7 @@ $EDITOR ./opts
 source ./opts
 
 lsblk
-read -p "which disk would you like to use? (only include the `sda` part of the drive name): " main_disk
+read -p "which disk would you like to use? (only include the \`sda\` part of the drive name): " main_disk
 
 read -p "press enter to edit drive, information about how to do this is on the arch wiki" _
 cfdisk /dev/$main_disk

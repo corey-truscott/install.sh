@@ -51,6 +51,9 @@ read -p "which drive partition is the home partition? (empty for none): " HOME
 read -p "which drive partition is the root partition?: " ROOT
 read -p "which drive partition is the boot partition?: " BOOT
 
+# copy pacman.conf > /etc/pacman.conf (live iso)
+cp ./pacman.conf /etc/pacman.conf
+
 # format boot and root partitions
 mkfs.fat -F32 /dev/$BOOT
 mkfs.ext4 /dev/$ROOT
@@ -73,6 +76,9 @@ pacstrap -K /mnt $(cat ./pkg)
 
 # generate the fstab file
 genfstab -U /mnt >> /mnt/etc/fstab
+
+# copy pacman.conf to the live machine
+cp ./pacman.conf /mnt/etc/pacman.conf
 
 # link the timezone to /etc/localtime
 $CHROOT ln -sf /usr/share/zoneinfo/$ZONEINFO /etc/localtime

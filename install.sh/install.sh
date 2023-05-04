@@ -72,11 +72,16 @@ $CHROOT echo "$HOSTNAME" >> /etc/hostname
 $NOTIFY
 
 echo "Changing root password."
-$CHROOT passwd
+while ! $CHROOT passwd
+do
+  echo "Try again"
+done
 
 $CHROOT systemctl enable NetworkManager.service
 
 $CHROOT grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 $CHROOT grub-mkconfig -o /boot/grub/grub.cfg
 
-echo "type \`reboot\` when you are ready to do so"
+echo "rebooting in 5 seconds"
+sleep 5
+reboot

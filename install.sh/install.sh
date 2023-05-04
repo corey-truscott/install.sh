@@ -1,5 +1,6 @@
 #!/bin/bash
 
+notify() { neofetch && neofetch && neofetch }
 CHROOT="arch-chroot /mnt"
 
 # set correct time for mirrors
@@ -40,13 +41,13 @@ read -p "which drive partition is the boot partition?: " BOOT
 
 mkfs.fat -F32 /dev/$BOOT
 mkfs.ext4 /dev/$ROOT
-mkfs.ext4 /dev/$HOME
 
 mount /dev/$ROOT /mnt
 mkdir -p /mnt/boot
 mount /dev/$BOOT /mnt/boot
 
 [ $HOME != "" ] &&
+  mkfs.ext4 /dev/$HOME
   mkdir -p /mnt/home
   mount /dev/$HOME /mnt/home
 
@@ -68,10 +69,14 @@ $CHROOT echo "$KEYMAP" >> /etc/vconsole.conf
 
 $CHROOT echo "$HOSTNAME" >> /etc/hostname
 
-neofetch
+notify
+
+echo "Changing root password."
 $CHROOT passwd
 
 $CHROOT systemctl enable NetworkManager.service
 
 $CHROOT grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 $CHROOT grub-mkconfig -o /boot/grub/grub.cfg
+
+reboot

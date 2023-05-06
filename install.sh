@@ -123,8 +123,13 @@ do
   echo "Try again"
 done
 
+su - $username -c "touch a"
+
 $CHROOT sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
 $CHROOT sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
+
+$CHROOT su - $username -c git clone https://aur.archlinux.org/yay.git ~/home/$username
+$CHROOT cd /home/$username/yay && su - $username -c makepkg -sri
 
 $CHROOT yay -S --noconfirm --needed --removemake $(cat ./aur)
 # readd mullvad-vpn-cli 

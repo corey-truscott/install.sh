@@ -35,8 +35,11 @@ read -p "which drive partition is the home partition? (empty for none): " HOME
 read -p "which drive partition is the root partition?: " ROOT
 read -p "which drive partition is the boot partition?: " BOOT
 
+# install neofetch to notify the user later
+pacman -Sy --noconfirm neofetch
+
 # copy pacman.conf > /etc/pacman.conf (live iso)
-cp ./pacman.conf /etc/pacman.conf
+cat ./pacman > /etc/pacman.conf
 
 # format boot and root partitions
 mkfs.fat -F32 /dev/$BOOT
@@ -62,7 +65,7 @@ pacstrap -K /mnt $(cat ./pkg)
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # copy pacman.conf to the live machine
-cp ./pacman.conf /mnt/etc/pacman.conf
+cat ./pacman > /mnt/etc/pacman.conf
 
 # link the timezone to /etc/localtime
 $CHROOT ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
@@ -85,6 +88,14 @@ $CHROOT echo "$keymap" >> /etc/vconsole.conf
 # generate hostname
 $CHROOT echo "$hostname" >> /etc/hostname
 
+# enable the NetworkManager service
+$CHROOT systemctl enable NetworkManager.service
+
+# install grub
+$CHROOT grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+$CHROOT grub-mkconfig -o /boot/grub/grub.cfg
+
+# notify
 neofetch
 
 # set root password
@@ -93,13 +104,6 @@ while ! $CHROOT passwd
 do
   echo "Try again"
 done
-
-# enable the NetworkManager service
-$CHROOT systemctl enable NetworkManager.service
-
-# install grub
-$CHROOT grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
-$CHROOT grub-mkconfig -o /boot/grub/grub.cfg
 
 # reboot
 echo "rebooting in 5 seconds"

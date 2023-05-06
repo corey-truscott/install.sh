@@ -1,1 +1,1 @@
-base base-devel linux linux-firmware efibootmgr networkmanager grub
+base base-devel linux linux-firmware efibootmgr networkmanager grub bc dash dunst exa fd firefox foot fzf htop hyprland imv lxappearance man-db neovim pulsemixer qbittorrent ripgrep rofi swaybg syncthing ttf-jetbrains-mono-nerd wget zsh git mpv tmux pcmanfm zathura zathura-pdf-poppler

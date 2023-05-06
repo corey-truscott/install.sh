@@ -21,6 +21,9 @@ read -p "what is your timezone? (example: Europe/London): " zoneinfo
 # TODO: implement "us" as the default if left blank
 read -p "what is your keymap? (example: us): " keymap
 
+# ask the user for username
+read -p "what do you want your username to be?: " username
+
 # ask which drive to use
 lsblk
 read -p "which disk would you like to use? (only include the \`sda\` part of the drive name): " main_disk
@@ -104,6 +107,31 @@ while ! $CHROOT passwd
 do
   echo "Try again"
 done
+
+# HYPR INSTALL
+
+# TODO: ask for username
+$CHROOT useradd -m -G wheel,networkmanager -s /bin/zsh $username
+
+# notify
+neofetch
+
+# set user password
+echo "Changing $username password."
+while ! $CHROOT passwd
+do
+  echo "Try again"
+done
+
+$CHROOT sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
+$CHROOT sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
+
+$CHROOT yay -S --noconfirm --needed --removemake $(cat ./aur)
+# readd mullvad-vpn-cli 
+
+$CHROOT rm -rf /home/$username/*
+$CHROOT git clone https://github.com/corey-truscott/hypr_dotfiles.git ~/home/$username
+$CHROOT chown -R $username: /home/$username
 
 # reboot
 echo "rebooting in 5 seconds"

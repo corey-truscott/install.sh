@@ -13,29 +13,13 @@ echo -e "         \`mkfs.ext4 /dev/$HOME\`, and delete it."
 echo -e "make sure all input is correct before entering, or the install will not work\n"
 echo -e "this script only supports uefi\n"
 
-# ask if they want to use vim or nano to edit the options file
-read -p "do you want to use vim or nano to edit install options? (v/n): " editor
+read -p "what do you want your hostname to be?: " hostname
 
-# set EDITOR variable
-case $editor in
-  [vV]* ) EDITOR="vim" ;;
-  [nN]* ) EDITOR="nano" ;;
-  *) echo "invalid response, try again.\n" && exit ;;
-esac
+# TODO: implement approximating timezone
+read -p "what is your timezone? (example: Europe/London): " zoneinfo
 
-# install the appropriate editor
-[ $EDITOR == "vim" ] &&
-  pacman -Sy --noconfirm vim neofetch
-
-[ $EDITOR == "nano" ] &&
-  pacman -Sy --noconfirm nano neofetch
-
-# TODO: convert the options in opts to questions within the script
-# and ask if they wish to preserve the old home folder
-#
-# edit the options file and source it
-$EDITOR ./opts
-source ./opts
+# TODO: implement "us" as the default if left blank
+read -p "what is your keymap? (example: us): " keymap
 
 # ask which drive to use
 lsblk
@@ -81,7 +65,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 cp ./pacman.conf /mnt/etc/pacman.conf
 
 # link the timezone to /etc/localtime
-$CHROOT ln -sf /usr/share/zoneinfo/$ZONEINFO /etc/localtime
+$CHROOT ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
 
 # sync the hardware clock
 $CHROOT hwclock --systohc
@@ -96,10 +80,10 @@ $CHROOT locale-gen
 $CHROOT echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # generate keymap
-$CHROOT echo "$KEYMAP" >> /etc/vconsole.conf
+$CHROOT echo "$keymap" >> /etc/vconsole.conf
 
 # generate hostname
-$CHROOT echo "$HOSTNAME" >> /etc/hostname
+$CHROOT echo "$hostname" >> /etc/hostname
 
 neofetch
 

@@ -1,5 +1,0 @@
-#!/bin/bash
-
-export HOSTNAME="arch"
-export ZONEINFO="Europe/London" # NOT YET IMPLEMENTED -- leave blank to automatically try to find your timezone (uses curl)
-export KEYMAP="us"

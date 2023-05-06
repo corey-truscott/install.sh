@@ -110,8 +110,8 @@ done
 
 # HYPR INSTALL
 
-# TODO: ask for username
-$CHROOT useradd -m -G wheel,networkmanager -s /bin/zsh $username
+$CHROOT useradd -m $username
+$CHROOT usermod -aG wheel $username
 
 # notify
 neofetch
